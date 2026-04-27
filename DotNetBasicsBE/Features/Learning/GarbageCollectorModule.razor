@@ -1,0 +1,27 @@
+@inject DotNetBasicsBE.Application.EducationalSandboxService Sandbox
+@inject DotNetBasicsBE.Application.AppStateService AppState
+
+<div class="card h-100">
+    <div class="card-body">
+        <h5 class="card-title">Garbage Collector</h5>
+        <p class="card-text">The module creates temporary objects and releases references to explain GC behavior.</p>
+        <pre><code>var objects = Enumerable.Range(1, 5000).Select(_ =&gt; new object()).ToList();
+objects.Clear();
+GC.Collect();</code></pre>
+        <button class="btn btn-outline-primary" @onclick="RunDemo">Try it out</button>
+        @if (!string.IsNullOrWhiteSpace(_result))
+        {
+            <p class="mt-3 mb-0"><strong>Result:</strong> @_result</p>
+        }
+    </div>
+</div>
+
+@code {
+    private string? _result;
+
+    private void RunDemo()
+    {
+        _result = Sandbox.RunGcDemo();
+        AppState.AddLog("Garbage Collector module executed.");
+    }
+}

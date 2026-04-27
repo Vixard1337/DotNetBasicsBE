@@ -1,0 +1,38 @@
+@inject DotNetBasicsBE.Application.AppStateService AppState
+@implements IDisposable
+
+<div class="log-panel card mt-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Application Logs</strong>
+        <span class="badge text-bg-secondary">@AppState.Logs.Count</span>
+    </div>
+    <div class="card-body log-container">
+        @if (AppState.Logs.Count == 0)
+        {
+            <p class="text-muted mb-0">No logs yet.</p>
+        }
+        else
+        {
+            <ul class="list-unstyled mb-0">
+                @foreach (var log in AppState.Logs)
+                {
+                    <li class="small">@log</li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        AppState.Changed += OnAppStateChanged;
+    }
+
+    private void OnAppStateChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        AppState.Changed -= OnAppStateChanged;
+    }
+}
