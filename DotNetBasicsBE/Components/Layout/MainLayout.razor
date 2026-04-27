@@ -1,13 +1,20 @@
 ﻿@inherits LayoutComponentBase
+@inject DotNetBasicsBE.Application.AppStateService AppState
+@implements IDisposable
 
-<div class="page">
+<div class="page @(AppState.IsDarkTheme ? "theme-dark" : "theme-light")">
     <div class="sidebar">
         <NavMenu />
     </div>
 
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <button class="btn btn-sm btn-outline-secondary" @onclick="ToggleLanguage">
+                @AppState.T("Język", "Language"): @AppState.Language
+            </button>
+            <button class="btn btn-sm btn-outline-secondary" @onclick="ToggleTheme">
+                @AppState.T("Motyw", "Theme"): @(AppState.IsDarkTheme ? "Dark" : "Light")
+            </button>
         </div>
 
         <article class="content px-4">
@@ -15,6 +22,30 @@
         </article>
     </main>
 </div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        AppState.Changed += OnStateChanged;
+    }
+
+    private void ToggleLanguage()
+    {
+        AppState.SetLanguage(AppState.Language == "PL" ? "EN" : "PL");
+    }
+
+    private void ToggleTheme()
+    {
+        AppState.ToggleTheme();
+    }
+
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        AppState.Changed -= OnStateChanged;
+    }
+}
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
