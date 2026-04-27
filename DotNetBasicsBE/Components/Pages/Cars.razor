@@ -1,0 +1,150 @@
+@page "/cars"
+@inject DotNetBasicsBE.Application.ICarService CarService
+@inject DotNetBasicsBE.Application.AppStateService AppState
+
+<PageTitle>Cars</PageTitle>
+
+<h1>Cars CRUD</h1>
+<p class="text-muted">Manage cars using business logic from the Application layer.</p>
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">@(_editingId is null ? "Add car" : $"Edit car #{_editingId}")</h5>
+                <EditForm Model="_form" OnValidSubmit="SaveAsync">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="mb-3">
+                        <label class="form-label">Brand</label>
+                        <InputText class="form-control" @bind-Value="_form.Brand" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Model</label>
+                        <InputText class="form-control" @bind-Value="_form.Model" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Year</label>
+                        <InputNumber class="form-control" @bind-Value="_form.Year" />
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary" type="submit">Save</button>
+                        <button class="btn btn-outline-secondary" type="button" @onclick="ResetForm">Clear</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Cars list</h5>
+                @if (_cars is null)
+                {
+                    <p><em>Loading...</em></p>
+                }
+                else if (_cars.Count == 0)
+                {
+                    <p class="text-muted">No cars in database.</p>
+                }
+                else
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Brand</th>
+                                <th>Model</th>
+                                <th>Year</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var car in _cars)
+                            {
+                                <tr>
+                                    <td>@car.Id</td>
+                                    <td>@car.Brand</td>
+                                    <td>@car.Model</td>
+                                    <td>@car.Year</td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-warning me-2" @onclick="() => Edit(car)">Edit</button>
+                                        <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteAsync(car.Id)">Delete</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<DotNetBasicsBE.UI.Components.LogPanel />
+
+@code {
+    private List<DotNetBasicsBE.DTOs.CarDto>? _cars;
+    private DotNetBasicsBE.DTOs.UpsertCarDto _form = new();
+    private int? _editingId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCarsAsync();
+    }
+
+    private async Task LoadCarsAsync()
+    {
+        _cars = (await CarService.GetAllAsync()).ToList();
+    }
+
+    private async Task SaveAsync()
+    {
+        if (_editingId is null)
+        {
+            var created = await CarService.CreateAsync(_form);
+            AppState.AddLog($"Car created: {created.Brand} {created.Model}");
+        }
+        else
+        {
+            var updated = await CarService.UpdateAsync(_editingId.Value, _form);
+            AppState.AddLog(updated
+                ? $"Car updated: #{_editingId}"
+                : $"Car update failed: #{_editingId}");
+        }
+
+        ResetForm();
+        await LoadCarsAsync();
+    }
+
+    private void Edit(DotNetBasicsBE.DTOs.CarDto car)
+    {
+        _editingId = car.Id;
+        _form = new DotNetBasicsBE.DTOs.UpsertCarDto
+        {
+            Brand = car.Brand,
+            Model = car.Model,
+            Year = car.Year
+        };
+
+        AppState.AddLog($"Editing car #{car.Id}");
+    }
+
+    private async Task DeleteAsync(int id)
+    {
+        var deleted = await CarService.DeleteAsync(id);
+        AppState.AddLog(deleted ? $"Car deleted: #{id}" : $"Car not found: #{id}");
+        await LoadCarsAsync();
+    }
+
+    private void ResetForm()
+    {
+        _editingId = null;
+        _form = new DotNetBasicsBE.DTOs.UpsertCarDto();
+    }
+}

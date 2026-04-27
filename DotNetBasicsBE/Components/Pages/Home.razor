@@ -1,7 +1,29 @@
 ﻿@page "/"
+@inject DotNetBasicsBE.Application.AppStateService AppState
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>DotNetBasics</h1>
 
-Welcome to your new app.
+<p>@AppState.T("Edukacyjna aplikacja Blazor do nauki C# i .NET backend w praktyce.", "Educational Blazor app to learn C# and .NET backend in practice.")</p>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Cars CRUD</h5>
+                <p class="card-text">@AppState.T("Praktyczne operacje CRUD z EF Core i Minimal API.", "Practical CRUD operations with EF Core and Minimal API.")</p>
+                <a class="btn btn-primary" href="cars">@AppState.T("Przejdź do Cars", "Go to Cars")</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Learning Modules</h5>
+                <p class="card-text">@AppState.T("Interaktywne moduły: OOP, GC, LINQ, async/await, DI.", "Interactive modules: OOP, GC, LINQ, async/await, DI.")</p>
+                <a class="btn btn-outline-primary" href="learn">@AppState.T("Przejdź do Learn", "Go to Learn")</a>
+            </div>
+        </div>
+    </div>
+</div>
