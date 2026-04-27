@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DotNetBasicsBE.Client\DotNetBasicsBE.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.6" />
   </ItemGroup>
 
 </Project>
