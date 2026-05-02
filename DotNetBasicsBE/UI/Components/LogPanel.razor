@@ -3,13 +3,13 @@
 
 <div class="log-panel card mt-3">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <strong>Application Logs</strong>
+        <strong>@AppState.T("Logi aplikacji", "Application Logs")</strong>
         <span class="badge text-bg-secondary">@AppState.Logs.Count</span>
     </div>
     <div class="card-body log-container">
         @if (AppState.Logs.Count == 0)
         {
-            <p class="text-muted mb-0">No logs yet.</p>
+            <p class="text-muted mb-0">@AppState.T("Brak logów.", "No logs yet.")</p>
         }
         else
         {

@@ -1,0 +1,49 @@
+@using DotNetBasicsBE.DTOs
+@using Microsoft.AspNetCore.Components.Forms
+@inject DotNetBasicsBE.Application.AppStateService AppState
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@(_editingId is null ? AppState.T("Dodaj samochód", "Add car") : AppState.T($"Edytuj samochód #{_editingId}", $"Edit car #{_editingId}"))</h5>
+        <EditForm Model="Model" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label class="form-label">@AppState.T("Marka", "Brand")</label>
+                <InputText class="form-control" @bind="Model.Brand" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">@AppState.T("Model", "Model")</label>
+                <InputText class="form-control" @bind="Model.Model" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">@AppState.T("Rok", "Year")</label>
+                <InputNumber TValue="int" class="form-control" @bind="Model.Year" />
+            </div>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary" type="submit">@AppState.T("Zapisz", "Save")</button>
+                <button class="btn btn-outline-secondary" type="button" @onclick="OnClear">@AppState.T("Wyczyść", "Clear")</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public UpsertCarDto Model { get; set; } = new();
+
+    [Parameter]
+    public int? EditingId { get; set; }
+
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
+    [Parameter]
+    public EventCallback OnClear { get; set; }
+
+    private int? _editingId => EditingId;
+}

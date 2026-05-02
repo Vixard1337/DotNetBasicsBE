@@ -1,9 +1,10 @@
 @page "/learn"
+@inject DotNetBasicsBE.Application.AppStateService AppState
 
 <PageTitle>Learn</PageTitle>
 
-<h1>Learning modules</h1>
-<p class="text-muted">Interactive examples for key C# and .NET backend topics.</p>
+<DotNetBasicsBE.UI.Components.PageHeader Title="@AppState.T("Moduły edukacyjne", "Learning modules")"
+                                           Subtitle="@AppState.T("Interaktywne przykłady kluczowych zagadnień C# i .NET.", "Interactive examples for key C# and .NET backend topics.")" />
 
 <div class="row row-cols-1 row-cols-md-2 g-3">
     <div class="col">

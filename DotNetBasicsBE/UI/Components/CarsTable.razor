@@ -1,0 +1,59 @@
+@using DotNetBasicsBE.DTOs
+@inject DotNetBasicsBE.Application.AppStateService AppState
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@AppState.T("Lista samochodów", "Cars list")</h5>
+        @if (IsLoading)
+        {
+            <p><em>@AppState.T("Ładowanie...", "Loading...")</em></p>
+        }
+        else if (Cars is null || Cars.Count == 0)
+        {
+            <p class="text-muted">@AppState.T("Brak samochodów w bazie.", "No cars in database.")</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>@AppState.T("Marka", "Brand")</th>
+                        <th>@AppState.T("Model", "Model")</th>
+                        <th>@AppState.T("Rok", "Year")</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var car in Cars)
+                    {
+                        <tr>
+                            <td>@car.Id</td>
+                            <td>@car.Brand</td>
+                            <td>@car.Model</td>
+                            <td>@car.Year</td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-warning me-2" @onclick="() => OnEdit.InvokeAsync(car)">@AppState.T("Edytuj", "Edit")</button>
+                                <button class="btn btn-sm btn-outline-danger" @onclick="() => OnDelete.InvokeAsync(car.Id)">@AppState.T("Usuń", "Delete")</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public IReadOnlyList<CarDto>? Cars { get; set; }
+
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    [Parameter]
+    public EventCallback<CarDto> OnEdit { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDelete { get; set; }
+}

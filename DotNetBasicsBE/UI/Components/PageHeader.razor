@@ -1,0 +1,15 @@
+<div class="mb-4">
+    <h1>@Title</h1>
+    @if (!string.IsNullOrWhiteSpace(Subtitle))
+    {
+        <p class="text-muted">@Subtitle</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? Subtitle { get; set; }
+}
