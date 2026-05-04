@@ -1,6 +1,7 @@
 using DotNetBasicsBE.Application;
 using DotNetBasicsBE.Components;
 using DotNetBasicsBE.Data;
+using DotNetBasicsBE.Domain;
 using DotNetBasicsBE.DTOs;
 using DotNetBasicsBE.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +43,18 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.EnsureCreated();
+
+    if (!dbContext.Cars.Any())
+    {
+        dbContext.Cars.AddRange(
+            new Car { Brand = "Toyota", Model = "Corolla", Year = 2022 },
+            new Car { Brand = "Volkswagen", Model = "Golf", Year = 2021 },
+            new Car { Brand = "Mazda", Model = "CX-5", Year = 2023 },
+            new Car { Brand = "Skoda", Model = "Octavia", Year = 2020 }
+        );
+
+        dbContext.SaveChanges();
+    }
 }
 
 app.MapGet("/cars", async (ICarService carService) =>
