@@ -35,6 +35,13 @@ Projekt został przygotowany jako portfolio do rozmowy rekrutacyjnej na stanowis
 - Zmiana motywu (light/dark)
 - Panel logów działania aplikacji
 
+## Materiały do nauki (Junior Backend .NET)
+
+- `Docs/CSharpBasics.md` — podstawy C#, OOP, typy, kolekcje, generyki, delegaty.
+- `Docs/DataAndEFCore.md` — LINQ, SQL, relacje, EF Core, DTO.
+- `Docs/WebApiAndArchitecture.md` — Web API, REST, DI, CQRS, wzorce, architektura.
+- `Docs/DevOpsAndOther.md` — testy, Git, Docker, bezpieczeństwo, cache, chmura, algorytmy.
+
 ## Etapy projektu
 
 1. Struktura projektu (inspirowana Clean Architecture) i encja `Car`.
